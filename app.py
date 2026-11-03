@@ -17,9 +17,11 @@ def enviarAlertaTelegram(estado, bateriaPct, alertas, temp, suelo):
     if ahora - ultimoEnvioTelegram < 10:
         return
     ultimoEnvioTelegram = ahora
-
-    token = "9219976325:AAHJ0SK7ouF3DSWdinNoTOpC_EXjz38CLiE"
-    chatId = "5566819758"
+    token = os.environ.get("TELEGRAM_TOKEN", "")
+    chatId = os.environ.get("TELEGRAM_CHAT_ID", "5566819758")
+    if not token:
+        return
+    
     url = f"https://api.telegram.org/bot{token}/sendMessage"
 
     detalleAlertas = "\n• ".join(alertas) if isinstance(alertas, list) else str(alertas)
@@ -1057,7 +1059,7 @@ def tick_replay(velocidad, intervalo, demora):
 # ============================================================
 #  INTERFAZ GRADIO — 5 pestañas
 # ============================================================
-WEBHOOK_N8N = "https://yii.app.n8n.cloud/webhook/agente-invernadero"
+WEBHOOK_N8N = os.environ.get("WEBHOOK_N8N", "")
 SESSION_ID_N8N = str(uuid.uuid4())
 
 def consultarAgenteN8n(mensajeUsuario, historial):
